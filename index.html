@@ -1,0 +1,71 @@
+<html>
+	<head>
+		<title>EDiary</title>
+	</head>
+	<body>
+		<h1>Log In</h1>
+		<input id='username'><br>
+		<input id='password'><br>
+		<button id='go'>Login</button>
+
+		<h1>Sign Up</h1>
+		<input id='signname'><br>
+		<input id='signpass'><br>
+		<button id='signgo'>Sign Up</button>
+		
+		
+		<script>
+			var username = document.getElementById('username');
+			var password = document.getElementById('password');
+			var go = document.getElementById('go');
+			var signname = document.getElementById('signname');
+			var signpass = document.getElementById('signpass');
+			var signgo = document.getElementById('signgo');
+
+			go.addEventListener('click', function() {
+				login(username.value, password.value)
+			});
+
+			signgo.addEventListener('click', function() {
+				signUp(signname.value, signpass.value)
+			});
+			
+			async function login(u, p) {
+				var options = {
+					method: 'POST',
+					headers: {
+						"Content-Type": "application/json"
+					},
+					body: JSON.stringify({
+						username: u,
+						password: p
+					})
+				};
+				var response = await fetch('/login', options);
+				var data = await response.json();
+				if (data.success === true) {
+					window.location = 'data.html?asdfwqetwerinfasmandfqewtryhdfghy-sdfgadfaesrhthrhrwertasdfasdfasdfetrtrtadsfasdft=' + data.id;
+				}
+			}
+
+			async function signUp(u, p) {
+				var options = {
+					method: 'POST',
+					headers: {
+						"Content-Type": "application/json"
+					},
+					body: JSON.stringify({
+						username: u,
+						password: p
+					})
+				};
+				var response = await fetch('/newUser', options);
+				var data = await response.json();
+				if (data.success === false) {
+					alert(data.reason);
+				}
+			}
+			
+		</script>
+	</body>
+</html>
