@@ -46,7 +46,7 @@
 					body: JSON.stringify({
 						id: q,
 						log: data,
-						date: d.getMonth() + '/' + d.getDate() + '/' + d.getFullYear()
+						date: d.getMonth()+1 + '/' + d.getDate() + '/' + d.getFullYear()
 					})
 				};
 				fetch('/addData', options);
