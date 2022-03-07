@@ -23,7 +23,7 @@ const app = express();
 var accounts = [];
 
 var carson = new Group('Carson\'s group');
-carson.logs.push("3/07/2022", "Hello World", "Carson")
+carson.logs.push(new Log("3/07/2022", "Hello World", "Carson"));
 
 var groups = [carson];
 
@@ -37,7 +37,7 @@ app.post('/login', (request, response) => {
 	var f = true;
 	for (var u in accounts) {
 		if (data.username === accounts[u].name && data.password === accounts[u].password) {
-			response.send({success: true, id: accounts[u].id});
+			response.send({success: true, name: accounts[u].name});
 			console.log("User: " + accounts[u].id + ' logged in.');
 			f = false;
 			return;
@@ -110,6 +110,7 @@ app.post('/addGroupData', (request, response) => {
 			return;
 		}
 	}
+	console.log(data.log)
 	response.send({success: false, reason: "Group doesn't exist!"});
 	
 });
