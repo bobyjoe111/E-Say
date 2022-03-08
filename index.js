@@ -1,7 +1,8 @@
 var alphabet = 'abcdefghijklmnopqrstuvwxyz';
 
-function Group(name) {
+function Group(name, password) {
 	this.name = name;
+	this.password = password;
 	this.id = alphabet[Math.floor(Math.random()*26)] + alphabet[Math.floor(Math.random()*26)] + alphabet[Math.floor(Math.random()*26)] + alphabet[Math.floor(Math.random()*26)] + alphabet[Math.floor(Math.random()*26)] + alphabet[Math.floor(Math.random()*26)] + alphabet[Math.floor(Math.random()*26)] + alphabet[Math.floor(Math.random()*26)] + alphabet[Math.floor(Math.random()*26)] + alphabet[Math.floor(Math.random()*26)] + alphabet[Math.floor(Math.random()*26)] + alphabet[Math.floor(Math.random()*26)] + alphabet[Math.floor(Math.random()*26)] + alphabet[Math.floor(Math.random()*26)] + alphabet[Math.floor(Math.random()*26)] + alphabet[Math.floor(Math.random()*26)] + alphabet[Math.floor(Math.random()*26)] + alphabet[Math.floor(Math.random()*26)] + alphabet[Math.floor(Math.random()*26)] + alphabet[Math.floor(Math.random()*26)] + alphabet[Math.floor(Math.random()*26)] + alphabet[Math.floor(Math.random()*26)] + alphabet[Math.floor(Math.random()*26)];
 	this.logs = [];
 }
@@ -22,7 +23,7 @@ const express = require('express');
 const app = express();
 var accounts = [];
 
-var carson = new Group('Carson\'s group');
+var carson = new Group('Carson\'s group', "dogs");
 carson.logs.push(new Log("3/07/2022", "Hello World", "Carson"));
 
 var groups = [carson];
@@ -57,7 +58,7 @@ app.post('/getData', (request, response) => {
 			return;
 		}
 	}
-	response.send({success: false, reason: "Account does not exist!"});
+	response.send({success: false, reason: "Please login!"});
 });
 app.post('/addData', (request, response) => {
 	var data = request.body;
@@ -69,7 +70,7 @@ app.post('/addData', (request, response) => {
 			return;
 		}
 	}
-	response.send({success: false, reason: "Account does not exist!"});
+	response.send({success: false, reason: "Please login!"});
 	
 });
 app.post('/newUser', (request, response) => {
@@ -88,29 +89,42 @@ app.post('/newUser', (request, response) => {
 	response.send({success: true});
 });
 
+app.post('/createGroup', (request, response) => {
+	var data = request.body;
+	for (var u in groups) {
+		if (data.name === groups[u].name) {
+			response.send({success: false, reason: "Group name is already taken!"});
+			return;
+		}
+	}
+	groups.push(new Group(data.name, data.password));
+	console.log(data.name + ' ' + data.password)
+	response.send({success: true});
+	
+});
+
 app.post('/getGroupData', (request, response) => {
 	var data = request.body;
 	for (var u in groups) {
 		if (data.name === groups[u].name) {
 			response.send({success: true, logs: groups[u].logs});
-			console.log(groups[u].id + ' grabbed their data.');
 			return;
 		}
 	}
+	console.log("Group doesn't exist")
 	response.send({success: false, reason: "Group does not exist!"});
 });
 
 app.post('/addGroupData', (request, response) => {
 	var data = request.body;
 	for (var u in groups) {
-		if (data.name === groups[u].name) {
+		if (data.name === groups[u].name && data.password === groups[u].password) {
 			groups[u].logs.push(new Log(data.date, data.log, data.author));
 			console.log("User: " + data.id + ' added data to their group');
 			response.send({success: true});
 			return;
 		}
 	}
-	console.log(data.log)
 	response.send({success: false, reason: "Group doesn't exist!"});
 	
 });

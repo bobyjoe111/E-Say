@@ -1,6 +1,6 @@
 <html>
 	<head>
-		<title>EDiary</title>
+		<title>E-Say Login</title>
 	</head>
 	<body>
 		<h1>Log In</h1>
@@ -12,6 +12,8 @@
 		<input id='signname'><br>
 		<input id='signpass'><br>
 		<button id='signgo'>Sign Up</button>
+		<h1>Create a Group</h1>
+		<button id='groupPage'>New Group</button>
 		
 		
 		<script>
@@ -21,7 +23,12 @@
 			var signname = document.getElementById('signname');
 			var signpass = document.getElementById('signpass');
 			var signgo = document.getElementById('signgo');
+			var groupButton = document.getElementById('groupPage');
 
+			groupButton.addEventListener("click", function() {
+				window.location = "createGroup.html";
+			});
+			
 			go.addEventListener('click', function() {
 				login(username.value, password.value)
 			});
@@ -43,8 +50,12 @@
 				};
 				var response = await fetch('/login', options);
 				var data = await response.json();
+				if (data.success === false) {
+					alert(data.reason);
+					return;
+				}
 				if (data.success === true) {
-					window.location = 'groupLogin.html?asdfwqetwerinfasmandfqewtryhdfghy-sdfgadfaesrhthrhrwertasdfasdfasdfetrtrtadsfasdft=' + data.name;
+					window.location = 'sayPage.html?timeStamp=' + btoa(data.name);
 				}
 			}
 
@@ -63,6 +74,7 @@
 				var data = await response.json();
 				if (data.success === false) {
 					alert(data.reason);
+					return;
 				}
 			}
 			
